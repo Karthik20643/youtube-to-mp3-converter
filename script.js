@@ -1,5 +1,3 @@
-const { error } = require("console");
-
 const link = document.getElementById('url');
 const butt = document.getElementById('btn');
 const status = document.getElementById('status');
@@ -9,26 +7,23 @@ butt.addEventListener('click', async () => {
 
   if (!utube_url) {
     alert("enter a valid youtube URL !");
+    return;
   }
 
   status.textContent = 'converting ... ';
 
   try {
-    const response = await fetch('/api/convert', {
+    const response = await fetch('/api/convert', { // no host
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: utube_url })
     });
 
-    if (!response.ok) {
-      throw new Error();
-    }
+    if (!response.ok) throw new Error();
 
     const data = await response.json();
 
-    status.innerHTML = `<a href="${data.downloadUrl}" download>Download MP3</a>`;
+    status.innerHTML = `<a href="${data.downloadurl}" download>Download MP3</a>`;
   } catch {
     status.textContent = 'Conversion failed';
   }
